@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "750665457145",
+    "project_id": "bookmateauth-83de2",
+    "storage_bucket": "bookmateauth-83de2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:750665457145:android:3b2e7612fff1840aeb3128",
+        "android_client_info": {
+          "package_name": "com.example.flutter_application_1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCghS8ddAb_S6LoplgItY1QyaJTB3n5RI4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
