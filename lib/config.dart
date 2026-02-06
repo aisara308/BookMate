@@ -6,9 +6,8 @@ import 'package:flutter_application_1/api_client.dart';
 import 'package:flutter_application_1/utils/parseMongoDate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final ApiClient api = ApiClient();
-
 final url = 'http://10.0.2.2:3000/';
+
 final registration = '${url}users/registration';
 final login = '${url}users/login';
 final updateProfile = '${url}users/update';
@@ -16,11 +15,20 @@ final getUserByEmail = '${url}users/email/';
 final getUserByUid = '${url}users/uid/';
 final setAvatar = '${url}users/avatar/set';
 final deleteAvatar = '${url}users/avatar';
+final changePassword = '${url}users/change-password';
 
 final sendRequest = '${url}friends/request';
 final acceptRequest = '${url}friends/accept';
 final removeFriend = '${url}friends/remove';
 final getFriends = '${url}friends/';
+
+// Основные действия с книгами
+final getMyBooks = '${url}books';
+final toggleBookFavorite = '${url}books/favorite';
+final toggleBookFinished = '${url}books/finished';
+final setBookProgress = '${url}books/progress';
+
+final ApiClient api = ApiClient();
 
 const _uidKey = 'uid';
 const _nameKey = 'name';

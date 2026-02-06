@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -93,15 +91,13 @@ class ApiClient {
     return request;
   }
 
-  /// ---------- GET BYTES (например картинки) ----------
-  Future<Uint8List> getBytes(String url, {Map<String, String>? headers}) async {
+  /// ---------- PATCH ----------
+  Future<http.Response> patch(
+    String url,
+    Object body, {
+    Map<String, String>? headers,
+  }) async {
     final h = await _getHeaders(extra: headers);
-    final response = await http.get(Uri.parse(url), headers: h);
-    if (response.statusCode != 200) {
-      throw Exception(
-        'getBytes failed ${response.statusCode}: ${response.body}',
-      );
-    }
-    return response.bodyBytes;
+    return http.patch(Uri.parse(url), headers: h, body: jsonEncode(body));
   }
 }

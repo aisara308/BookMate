@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/start/register_screen.dart';
 import 'package:flutter_application_1/pages/mybooks_screen.dart';
 import 'package:flutter_application_1/config.dart';
+import 'package:flutter_application_1/utils/keys.dart';
+import 'package:flutter_application_1/utils/show_error.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -57,7 +60,8 @@ class _LoginScreenState extends State<LoginScreen> {
         return true;
       } else {
         setState(() {
-          errorMessage = "Login error: ${responce.body}";
+          errorMessage = tr(Keys.loginError, args: [responce.body]);
+          showError(context, errorMessage!);
         });
         return false;
       }
@@ -98,8 +102,8 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Text(
-                    "Join",
+                  Text(
+                    tr(Keys.joinTitle),
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
@@ -108,8 +112,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 12),
 
-                  const Text(
-                    "Read books, share gifts and enjoy your hobby\nwith the unlimited possibilities of technology",
+                  Text(
+                    tr(Keys.joinSubtitle),
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 14,
@@ -125,14 +129,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         Icons.email,
                         color: Color.fromARGB(194, 60, 57, 103),
                       ),
-                      labelText: "Email",
+                      labelText: tr(Keys.email),
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
                       errorStyle: TextStyle(color: Colors.white),
-                      errorText: _isNotValidate ? "Enter proper email" : null,
+                      errorText: _isNotValidate
+                          ? tr(Keys.enterProperEmail)
+                          : null,
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -142,12 +148,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     obscureText: _obscure,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.lock),
-                      labelText: "Password",
+                      labelText: tr(Keys.password),
                       filled: true,
                       fillColor: Colors.white,
                       errorStyle: TextStyle(color: Colors.white),
                       errorText: _isNotValidate
-                          ? "Enter proper password"
+                          ? tr(Keys.enterProperPassword)
                           : null,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
@@ -187,8 +193,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             await loginUser();
                             await getInfoAndCache();
                           },
-                          child: const Text(
-                            "Sign in",
+                          child: Text(
+                            tr(Keys.signIn),
                             style: TextStyle(fontSize: 18),
                           ),
                         ),
@@ -201,10 +207,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                 color: Color.fromRGBO(60, 57, 103, 1),
                               ),
                             ),
-                            const Padding(
+                            Padding(
                               padding: EdgeInsets.symmetric(horizontal: 10),
                               child: Text(
-                                "or",
+                                tr(Keys.or),
                                 style: TextStyle(
                                   color: Color.fromRGBO(60, 57, 103, 1),
                                 ),
@@ -228,7 +234,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             );
                           },
-                          child: const Text("Don't have an account?"),
+                          child: Text(tr(Keys.dontHaveAccount)),
                         ),
                       ],
                     ),

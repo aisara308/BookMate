@@ -1,7 +1,10 @@
 import 'dart:convert';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/config.dart';
 import 'package:flutter_application_1/pages/mybooks_screen.dart';
+import 'package:flutter_application_1/utils/keys.dart';
+import 'package:flutter_application_1/utils/show_error.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -33,7 +36,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String? errorMessage = '';
   bool _obscure = true;
 
+  String? validatePassword(String password) {
+    if (password.isEmpty) return tr(Keys.enterProperPassword);
+    if (password.length < 8) return tr(Keys.passwordTooShort);
+    if (!RegExp(r'[0-9]').hasMatch(password)) return tr(Keys.passwordNoDigit);
+    if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(password))
+      return tr(Keys.passwordNoSpecial);
+    return null;
+  }
+
   Future<bool> registerUser() async {
+    final error = validatePassword(passwordController.text);
+    if (error != null) {
+      showError(context, error);
+      return false;
+    }
+
     if (_formKey.currentState!.validate()) {
       var regBody = {
         "name": nameController.text,
@@ -48,7 +66,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
 
       var jsonResponce = jsonDecode(responce.body);
-      print(jsonResponce);
 
       if (responce.statusCode == 200) {
         final prefs = await SharedPreferences.getInstance();
@@ -56,13 +73,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
         await prefs.setString('uid', jsonResponce['uid'] ?? '');
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => MyBooksScreen()),
+          MaterialPageRoute(builder: (context) => const MyBooksScreen()),
         );
         return true;
       } else {
-        setState(() {
-          errorMessage = "Registration error: ${responce.body}";
-        });
+        showError(context, tr(Keys.registrationError, args: [responce.body]));
         return false;
       }
     } else {
@@ -78,31 +93,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
-  String? _validateName(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return "Enter the name";
-    }
-    return null;
-  }
+  String? _validateName(String? value) =>
+      value == null || value.trim().isEmpty ? tr(Keys.enterProperName) : null;
 
   String? _validateEmail(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return "Enter email";
-    }
+    if (value == null || value.trim().isEmpty) return tr(Keys.enterProperEmail);
     String pattern = r'^[^@]+@[^@]+\.[^@]+';
-    if (!RegExp(pattern).hasMatch(value.trim())) {
-      return "Enter proper email";
-    }
+    if (!RegExp(pattern).hasMatch(value.trim()))
+      return tr(Keys.enterProperEmail);
     return null;
   }
 
   String? _validatePassword(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return "Enter the password";
-    }
-    if (value.length < 6) {
-      return "Password is too short";
-    }
+    if (value == null || value.trim().isEmpty)
+      return tr(Keys.enterProperPassword);
+    if (value.length < 8) return tr(Keys.passwordTooShort);
     return null;
   }
 
@@ -130,8 +135,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text(
-                      "Join",
+                    Text(
+                      tr(Keys.joinTitle),
                       style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
@@ -140,8 +145,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     const SizedBox(height: 12),
 
-                    const Text(
-                      "Read books, share gifts and enjoy your hobby\nwith the unlimited possibilities of technology",
+                    Text(
+                      tr(Keys.joinSubtitle),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 14,
@@ -158,7 +163,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           Icons.person,
                           color: Color.fromARGB(194, 60, 57, 103),
                         ),
-                        labelText: "Name",
+                        labelText: tr(Keys.name),
                         filled: true,
                         fillColor: Colors.white,
                         border: OutlineInputBorder(
@@ -176,7 +181,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           Icons.email,
                           color: Color.fromARGB(194, 60, 57, 103),
                         ),
-                        labelText: "Email",
+                        labelText: tr(Keys.email),
                         filled: true,
                         fillColor: Colors.white,
                         border: OutlineInputBorder(
@@ -195,7 +200,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           Icons.lock,
                           color: Color.fromARGB(194, 60, 57, 103),
                         ),
-                        labelText: "Password",
+                        labelText: tr(Keys.password),
                         filled: true,
                         fillColor: Colors.white,
                         border: OutlineInputBorder(
@@ -241,8 +246,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             );
                           }
                         },
-                        child: const Text(
-                          "Sign up",
+                        child: Text(
+                          tr(Keys.signUp),
                           style: TextStyle(fontSize: 18),
                         ),
                       ),
@@ -256,10 +261,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             color: Color.fromRGBO(60, 57, 103, 1),
                           ),
                         ),
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.symmetric(horizontal: 10),
                           child: Text(
-                            "or",
+                            tr(Keys.or),
                             style: TextStyle(
                               color: Color.fromRGBO(60, 57, 103, 1),
                             ),
@@ -279,7 +284,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: const Text("Already have an account?"),
+                      child: Text(tr(Keys.alreadyHaveAccount)),
                     ),
                     const SizedBox(height: 10),
                   ],

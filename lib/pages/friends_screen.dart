@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/api_client.dart';
 import 'package:flutter_application_1/config.dart';
-import 'package:flutter_application_1/pages/menu_button.dart';
+import 'package:flutter_application_1/utils/keys.dart';
+import 'package:flutter_application_1/utils/menu_button.dart';
 
 class FriendsScreen extends StatefulWidget {
   const FriendsScreen({super.key});
@@ -122,7 +124,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
                   /// 🔍 ПОИСК
                   TextField(
                     decoration: InputDecoration(
-                      hintText: 'Поиск друга...',
+                      hintText: tr(Keys.searchFriendHint),
                       prefixIcon: const Icon(Icons.search),
                       filled: true,
                       fillColor: Colors.white.withOpacity(0.9),
@@ -162,7 +164,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
                   Row(
                     children: [
                       _tabButton(
-                        title: 'Мои друзья',
+                        title: tr(Keys.myFriendsTab),
                         selected: showMyFriends,
                         onTap: () {
                           setState(() => showMyFriends = true);
@@ -170,7 +172,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
                       ),
                       const SizedBox(width: 8),
                       _tabButton(
-                        title: 'Добавить друга',
+                        title: tr(Keys.addFriendTab),
                         selected: !showMyFriends,
                         onTap: () {
                           setState(() => showMyFriends = false);
@@ -193,9 +195,9 @@ class _FriendsScreenState extends State<FriendsScreen> {
                             },
                           )
                         : searchedUser == null
-                        ? const Center(child: Text('Пользователь не найден'))
+                        ? Center(child: Text(tr(Keys.userNotFound)))
                         : searchedUser['uid'] == myUid
-                        ? const Center(child: Text('You can\'t add yourself'))
+                        ? Center(child: Text(tr(Keys.cantAddYourself)))
                         : _friendCard(searchedUser),
                   ),
                 ],
